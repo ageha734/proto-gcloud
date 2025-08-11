@@ -1,0 +1,92 @@
+name: "[CI] Proto Tools"
+
+on:
+    push:
+        branches:
+        - feature/**
+        - hotfix/**
+        paths:
+        - '.github/workflows/ci.yaml'
+        - 'src/**'
+        - 'tests/**'
+        - 'Cargo.toml'
+    pull_request:
+        branches:
+        - develop
+        - feature/**
+        - hotfix/**
+        paths:
+            - '.github/workflows/ci.yaml'
+            - 'src/**'
+            - 'tests/**'
+            - 'Cargo.toml'
+
+jobs:
+    run-format:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-24.04, windows-2025, macos-15]
+            fail-fast: false
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Setup Rust
+          uses: moonrepo/setup-rust@v1.2.2
+          with:
+              cache: false
+              components: rustfmt
+
+        - name: Run Format
+          run: cargo fmt --all --check
+
+    run-lint:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-24.04, windows-2025, macos-15]
+            fail-fast: false
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Setup Rust
+          uses: moonrepo/setup-rust@v1.2.2
+          with:
+              cache: false
+              components: clippy
+
+        - name: Run Lint
+          run: cargo clippy --workspace --all-targets
+
+    run-test:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-24.04, windows-2025, macos-15]
+            fail-fast: false
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Setup Rust
+          uses: moonrepo/setup-rust@v1.2.2
+          with:
+              bins: cargo-nextest
+              cache: false
+
+        - name: Setup Toolchain
+          uses: moonrepo/setup-toolchain@v0.5.0
+
+        - name: Build Proto Plugin
+          uses: moonrepo/build-proto-plugin@v0.4.2
+
+        - name: Run Test
+          run: cargo nextest run --no-default-features

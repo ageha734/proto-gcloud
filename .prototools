@@ -1,0 +1,6 @@
+rust = "1.76.0"
+dprint = "0.50.1"
+
+[plugins]
+gcloud-test = "source:target/wasm32-wasip1/debug/gcloud_plugin.wasm"
+dprint = "https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/dprint/plugin.toml"

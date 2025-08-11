@@ -1,0 +1,29 @@
+{
+    "$schema": "https://dprint.dev/schemas/v0.json",
+    "excludes": [
+        "**/target/**/*.*"
+    ],
+    "lineWidth": 100,
+    "indentWidth": 4,
+    "useTabs": false,
+    "newLineKind": "lf",
+    "plugins": [
+        "https://plugins.dprint.dev/json-0.20.0.wasm",
+        "https://plugins.dprint.dev/toml-0.7.0.wasm",
+        "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.1.wasm"
+    ],
+    "json": {
+        "commentLine.forceSpaceAfterSlashes": true,
+        "jsonTrailingCommaFiles": [
+            "tsconfig.json"
+        ]
+    },
+    "yaml": {
+        "quotes": "preferSingle",
+        "indentBlockSequenceInMap": false,
+        "ignoreCommentDirective": "formatter-ignore"
+    },
+    "toml": {
+        "comment.forceLeadingSpace": true
+    }
+}
