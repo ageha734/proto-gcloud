@@ -14,7 +14,7 @@ gcloud = "github://ageha734/proto-gcloud"
 Or preferably pin a specific version, to avoid nasty surprises if we mess up a release:
 
 ```toml
-proto plugin add flutter github://ageha734/proto-gcloud
+proto plugin add gcloud github://ageha734/proto-gcloud
 ```
 
 ## Usage
