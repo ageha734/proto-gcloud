@@ -1,6 +1,3 @@
-はい、承知いたしました。
-以下は、`dotnet` と `.NET` の記述を `gcloud` に修正したものです。
-
 # proto gcloud plugin
 
 [gcloud](https://cloud.google.com/sdk) WASM plugin for [proto](https://github.com/moonrepo/proto).
