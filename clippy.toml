@@ -1,0 +1,25 @@
+msrv = "1.90.0"
+
+warn-on-all-wildcard-imports = true
+
+cognitive-complexity-threshold = 30
+type-complexity-threshold = 250
+
+too-many-arguments-threshold = 7
+too-many-lines-threshold = 100
+
+avoid-breaking-exported-api = false
+single-char-binding-names-threshold = 4
+
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+
+too-large-for-stack = 200
+enum-variant-size-threshold = 200
+
+unnecessary-box-size = 128
+array-size-threshold = 512000
+
+pass-by-value-size-limit = 256
+min-ident-chars-threshold = 1
