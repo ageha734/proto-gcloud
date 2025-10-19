@@ -19,8 +19,10 @@ jobs:
         - name: Setup Rust
           uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
-              cache: false
+              channel: '1.90.0'
               targets: wasm32-wasip1
+              cache-targets: release
+              cache: false
 
         - if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
           id: build
