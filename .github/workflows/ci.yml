@@ -90,6 +90,7 @@ jobs:
 
     run-build:
         needs: [run-format, run-lint, run-test]
+
         runs-on: ${{ matrix.os }}
 
         strategy:
@@ -105,15 +106,15 @@ jobs:
           uses: moonrepo/setup-rust@v1.2.2
           with:
               cache: false
-              components: cargo
+              targets: wasm32-wasip1
 
-        - name: Build Proto Plugin
-          uses: moonrepo/build-proto-plugin@v0.4.2
-
-        - name: Run Build
-          run: cargo build --target wasm32-wasip1
+        - id: build
+          name: Build Proto Plugin
+          uses: moonrepo/build-wasm-plugin@v0.4.2
 
     run-approval:
+        needs: run-build
+
         runs-on: ubuntu-24.04
 
         steps:
