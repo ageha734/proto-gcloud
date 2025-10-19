@@ -192,13 +192,22 @@ pub fn locate_executables(
     let env = get_host_environment()?;
 
     Ok(Json(LocateExecutablesOutput {
-        exes: HashMap::from_iter([(
-            "gcloud".into(),
-            ExecutableConfig::new_primary(
-                env.os
-                    .for_native("google-cloud-sdk/bin/gcloud", "google-cloud-sdk/bin/gcloud"),
+        exes: HashMap::from_iter([
+            (
+                "gcloud".into(),
+                ExecutableConfig::new_primary(
+                    env.os
+                        .for_native("google-cloud-sdk/bin/gcloud", "google-cloud-sdk/bin/gcloud"),
+                ),
             ),
-        )]),
+            (
+                "gsutil".into(),
+                ExecutableConfig {
+                    no_bin: true,
+                    ..ExecutableConfig::default()
+                },
+            ),
+        ]),
         globals_lookup_dirs: vec!["$HOME/.gcloud/bin".into()],
         ..LocateExecutablesOutput::default()
     }))
