@@ -3,7 +3,7 @@ name: '[CI] Proto Tools'
 on:
     push:
         branches:
-        - prerelease/**
+        - prerelease
         paths:
         - '.github/workflows/ci.yml'
         - 'src/**'
@@ -11,7 +11,7 @@ on:
         - 'Cargo.toml'
     pull_request:
         branches:
-        - prerelease/**
+        - prerelease
         paths:
         - '.github/workflows/ci.yml'
         - 'src/**'
@@ -114,6 +114,7 @@ jobs:
 
     run-approval:
         needs: run-build
+        if: github.event_name == 'pull_request'
 
         runs-on: ubuntu-24.04
 
@@ -121,18 +122,20 @@ jobs:
         - name: Checkout Repository
           uses: actions/checkout@v4.2.2
 
-        - name: Something when command success
+        - name: Comment on PR when tests pass
           run: |
               comment_body="Tests passed! Please review."
-              reviewers=$(echo "${{ toJson(github.event.pull_request.requested_reviewers.*.login) }}")
+              reviewers=$(echo '${{ toJson(github.event.pull_request.requested_reviewers.*.login) }}' | jq -r '.[]' 2>/dev/null || echo "")
               for reviewer in $reviewers; do
                 comment_body+=" @$reviewer"
               done
-              comment_body=${comment_body//@\[}
-              comment_body=${comment_body//@\]}
-              curl -X POST -H "Authorization: token $GH_TOKEN" -d "{\"body\": \"$comment_body\"}" "https://api.github.com/repos/$GH_REPO/issues/$NUMBER/comments"
+              curl -X POST \
+                -H "Authorization: token $GH_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                -d "{\"body\": \"$comment_body\"}" \
+                "https://api.github.com/repos/$GH_REPO/issues/$NUMBER/comments"
           env:
-              GH_TOKEN: ${{ secrets.token }}
+              GH_TOKEN: ${{ secrets.PRE_GITHUB_TOKEN }}
               GH_REPO: ${{ github.repository }}
-              NUMBER: ${{github.event.number}}
+              NUMBER: ${{ github.event.pull_request.number }}
           if: success()
