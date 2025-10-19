@@ -32,11 +32,11 @@ jobs:
     release:
         needs: build
 
+        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
         runs-on: ubuntu-24.04
 
         steps:
-        - if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-          name: Release
+        - name: Release
           uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af # v1.18.0
           with:
               artifacts: ${{ steps.build.outputs.artifacts }}
@@ -46,14 +46,27 @@ jobs:
               prerelease: ${{ contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-rc') }}
               skipIfReleaseExists: true
 
-    update-changelog:
+    rerun-on-failure:
         needs: release
 
+        if: failure() && fromJSON(github.run_attempt) < 3
         runs-on: ubuntu-24.04
 
         steps:
-        - if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-          name: Update CHANGELOG
+        - run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
+          env:
+              GH_REPO: ${{ github.repository }}
+              GH_TOKEN: ${{ github.token }}
+              GH_DEBUG: api
+
+    update-changelog:
+        needs: release
+
+        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        runs-on: ubuntu-24.04
+
+        steps:
+        - name: Update CHANGELOG
           run: |
               VERSION=${GITHUB_REF_NAME#v}
 
