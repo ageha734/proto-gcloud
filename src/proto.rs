@@ -93,12 +93,12 @@ pub fn extract_version_from_name(name: &str) -> Option<String> {
         return None;
     }
 
-    let mut chars = name.chars().peekable();
+    let chars = name.chars().peekable();
     let mut current_token = String::new();
     let mut in_version = false;
     let mut dot_count = 0;
 
-    while let Some(ch) = chars.next() {
+    for ch in chars {
         if ch.is_ascii_digit() {
             current_token.push(ch);
             in_version = true;
@@ -166,9 +166,9 @@ pub fn download_prebuilt(
     let version = version_spec.as_version().unwrap();
 
     let filename = if env.os.is_windows() {
-        format!("zip")
+        "zip".to_string()
     } else {
-        format!("tar.gz")
+        "tar.gz".to_string()
     };
 
     let download_url = config
