@@ -1,6 +1,5 @@
 use gcloud_plugin::*;
 use proto_pdk_test_utils::*;
-use starbase_sandbox::create_empty_sandbox;
 
 generate_resolve_versions_tests!("gcloud-test", {
     "519" => "519.0.0",
@@ -8,22 +7,22 @@ generate_resolve_versions_tests!("gcloud-test", {
     "519.0.0" => "519.0.0",
 });
 
-#[test]
-fn can_load_versions() {
-    let sandbox = create_empty_sandbox();
-    let plugin = create_plugin("gcloud-test", sandbox.path());
+#[tokio::test(flavor = "multi_thread")]
+async fn can_load_versions() {
+    let sandbox = create_empty_proto_sandbox();
+    let plugin = sandbox.create_plugin("gcloud-test").await;
 
-    let output = plugin.load_versions(LoadVersionsInput::default());
+    let output = plugin.load_versions(LoadVersionsInput::default()).await;
 
     assert!(!output.versions.is_empty());
 }
 
-#[test]
-fn sets_latest_alias() {
-    let sandbox = create_empty_sandbox();
-    let plugin = create_plugin("gcloud-test", sandbox.path());
+#[tokio::test(flavor = "multi_thread")]
+async fn sets_latest_alias() {
+    let sandbox = create_empty_proto_sandbox();
+    let plugin = sandbox.create_plugin("gcloud-test").await;
 
-    let output = plugin.load_versions(LoadVersionsInput::default());
+    let output = plugin.load_versions(LoadVersionsInput::default()).await;
 
     assert!(output.latest.is_some());
     assert!(output.aliases.contains_key("latest"));
