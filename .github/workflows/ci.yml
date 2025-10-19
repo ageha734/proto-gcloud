@@ -3,8 +3,7 @@ name: '[CI] Proto Tools'
 on:
     push:
         branches:
-        - feature/**
-        - hotfix/**
+        - prerelease/**
         paths:
         - '.github/workflows/ci.yaml'
         - 'src/**'
@@ -12,9 +11,7 @@ on:
         - 'Cargo.toml'
     pull_request:
         branches:
-        - develop
-        - feature/**
-        - hotfix/**
+        - prerelease/**
         paths:
         - '.github/workflows/ci.yaml'
         - 'src/**'
@@ -90,3 +87,51 @@ jobs:
 
         - name: Run Test
           run: cargo nextest run --no-default-features
+
+    run-build:
+        needs: [run-format, run-lint, run-test]
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os: [ubuntu-24.04, windows-2025, macos-15]
+            fail-fast: false
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Setup Rust
+          uses: moonrepo/setup-rust@v1.2.2
+          with:
+              cache: false
+              components: cargo
+
+        - name: Build Proto Plugin
+          uses: moonrepo/build-proto-plugin@v0.4.2
+
+        - name: Run Build
+          run: cargo build --target wasm32-wasip1
+
+    run-approval:
+        runs-on: ubuntu-24.04
+
+        steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4.2.2
+
+        - name: Something when command success
+          run: |
+              comment_body="Tests passed! Please review."
+              reviewers=$(echo "${{ toJson(github.event.pull_request.requested_reviewers.*.login) }}")
+              for reviewer in $reviewers; do
+                comment_body+=" @$reviewer"
+              done
+              comment_body=${comment_body//@\[}
+              comment_body=${comment_body//@\]}
+              curl -X POST -H "Authorization: token $GH_TOKEN" -d "{\"body\": \"$comment_body\"}" "https://api.github.com/repos/$GH_REPO/issues/$NUMBER/comments"
+          env:
+              GH_TOKEN: ${{ secrets.token }}
+              GH_REPO: ${{ github.repository }}
+              NUMBER: ${{github.event.number}}
+          if: success()
