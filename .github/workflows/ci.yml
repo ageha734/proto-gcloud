@@ -72,6 +72,8 @@ jobs:
               targets: wasm32-wasip1
               bins: cargo-nextest
               cache: false
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Setup Toolchain
           uses: moonrepo/setup-toolchain@827700d97fe7dd1c3030018529e43e23c377c308 # v0.5.0
