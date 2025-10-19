@@ -14,10 +14,10 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Setup Rust
-          uses: moonrepo/setup-rust@v1.2.2
+          uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
               cache: false
               targets: wasm32-wasip1
@@ -25,7 +25,7 @@ jobs:
         - if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
           id: build
           name: Build Proto Plugin
-          uses: moonrepo/build-wasm-plugin@v0.4.2
+          uses: moonrepo/build-wasm-plugin@60ff6f68ae0e0b4dc4b959835cd84b8d535403c2 # v0.4.2
 
     release:
         needs: build
@@ -35,7 +35,7 @@ jobs:
         steps:
         - if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
           name: Release
-          uses: ncipollo/release-action@v1.18.0
+          uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af # v1.18.0
           with:
               artifacts: ${{ steps.build.outputs.artifacts }}
               artifactErrorsFailBuild: true

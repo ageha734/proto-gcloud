@@ -24,10 +24,10 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Setup Rust
-          uses: moonrepo/setup-rust@v1.2.2
+          uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
               cache: false
               components: rustfmt
@@ -40,10 +40,10 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Setup Rust
-          uses: moonrepo/setup-rust@v1.2.2
+          uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
               cache: false
               components: clippy
@@ -61,19 +61,19 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Setup Rust
-          uses: moonrepo/setup-rust@v1.2.2
+          uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
               bins: cargo-nextest
               cache: false
 
         - name: Setup Toolchain
-          uses: moonrepo/setup-toolchain@v0.5.0
+          uses: moonrepo/setup-toolchain@827700d97fe7dd1c3030018529e43e23c377c308 # v0.5.0
 
         - name: Build Proto Plugin
-          uses: moonrepo/build-proto-plugin@v0.4.2
+          uses: moonrepo/build-proto-plugin@60ff6f68ae0e0b4dc4b959835cd84b8d535403c2 # v0.4.2
 
         - name: Run Test
           run: cargo nextest run --no-default-features
@@ -90,17 +90,17 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Setup Rust
-          uses: moonrepo/setup-rust@v1.2.2
+          uses: moonrepo/setup-rust@ede6de059f8046a5e236c94046823e2af11ca670 # v1.2.2
           with:
               cache: false
               targets: wasm32-wasip1
 
         - id: build
           name: Build Proto Plugin
-          uses: moonrepo/build-wasm-plugin@v0.4.2
+          uses: moonrepo/build-wasm-plugin@60ff6f68ae0e0b4dc4b959835cd84b8d535403c2 # v0.4.2
 
     run-approval:
         needs: run-build
@@ -110,7 +110,7 @@ jobs:
 
         steps:
         - name: Checkout Repository
-          uses: actions/checkout@v4.2.2
+          uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Comment on PR when tests pass
           run: |
