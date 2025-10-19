@@ -1,4 +1,4 @@
-name: "[Release] Proto Tools"
+name: '[Release] Proto Tools'
 
 permissions:
     contents: write

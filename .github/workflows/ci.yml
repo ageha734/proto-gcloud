@@ -1,4 +1,4 @@
-name: "[CI] Proto Tools"
+name: '[CI] Proto Tools'
 
 on:
     push:
@@ -16,10 +16,10 @@ on:
         - feature/**
         - hotfix/**
         paths:
-            - '.github/workflows/ci.yaml'
-            - 'src/**'
-            - 'tests/**'
-            - 'Cargo.toml'
+        - '.github/workflows/ci.yaml'
+        - 'src/**'
+        - 'tests/**'
+        - 'Cargo.toml'
 
 jobs:
     run-format:
