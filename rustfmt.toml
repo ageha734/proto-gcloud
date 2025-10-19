@@ -1,9 +1,10 @@
 max_width = 100
-comment_width = 100
 match_block_trailing_comma = true
-wrap_comments = true
-edition = "2024"
-error_on_line_overflow = true
-imports_granularity = "Module"
-style_edition = "2024"
-ignore = []
+edition = "2021"
+
+# 以下の設定はnightly版でのみ利用可能
+# nightly版を使用する場合は、コメントを解除してください
+# wrap_comments = true
+# comment_width = 100
+# error_on_line_overflow = true
+# imports_granularity = "Module"
