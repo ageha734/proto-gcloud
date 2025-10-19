@@ -1,5 +1,4 @@
 dprint = "0.50.1"
-gcloud-test = "543.0.0"
 
 [plugins]
 gcloud-test = "source:target/wasm32-wasip1/debug/gcloud_plugin.wasm"
