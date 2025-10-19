@@ -6,5 +6,3 @@ DOTNET_ROOT = { value = "", force = true }
 build = "build --target wasm32-wasip1"
 format = "fmt --all --check"
 lint = "clippy --all-targets --all-features -- -D warnings"
-test = "test --test-threads=1"
-release = "build --target wasm32-wasip1 --release"
