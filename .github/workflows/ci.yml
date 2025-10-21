@@ -109,12 +109,19 @@ jobs:
           name: Build Proto Plugin
           uses: moonrepo/build-wasm-plugin@60ff6f68ae0e0b4dc4b959835cd84b8d535403c2 # v0.4.2
 
+        - name: Verify Build Output
+          run: |
+              echo "Checking for WASM files..."
+              ls -la target/wasm32-wasip1/debug/ || echo "Debug directory not found"
+              find target -name "*.wasm" -type f || echo "No WASM files found"
+
         - name: Upload Plugin Artifact
           uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
           with:
               name: plugin-${{ matrix.os }}
-              path: target/wasm32-wasip1/debug/*.wasm
+              path: target/wasm32-wasip1/debug/gcloud_plugin.wasm
               retention-days: 1
+              if-no-files-found: error
 
     run-e2e:
         needs: [run-build, run-test]
@@ -135,6 +142,13 @@ jobs:
           with:
               name: plugin-${{ matrix.os }}
               path: target/wasm32-wasip1/debug/
+
+        - name: Verify Downloaded Artifact
+          run: |
+              echo "Checking downloaded files..."
+              ls -la target/wasm32-wasip1/debug/ || echo "Debug directory not found"
+              test -f target/wasm32-wasip1/debug/gcloud_plugin.wasm || (echo "gcloud_plugin.wasm not found" && exit 1)
+              echo "Plugin file found successfully"
 
         - name: Setup Proto
           uses: moonrepo/setup-toolchain@3927d571963592235146e8e0b5261206954796a2 # v0.6.0
