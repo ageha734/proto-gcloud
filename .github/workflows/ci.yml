@@ -105,9 +105,8 @@ jobs:
               channel: '1.90.0'
               cache: true
 
-        - id: build
-          name: Build Proto Plugin
-          uses: moonrepo/build-wasm-plugin@60ff6f68ae0e0b4dc4b959835cd84b8d535403c2 # v0.4.2
+        - name: Build WASM Plugin
+          run: cargo build --target wasm32-wasip1
 
         - name: Verify Build Output
           run: |
@@ -138,7 +137,7 @@ jobs:
           uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
         - name: Download Plugin Artifact
-          uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+          uses: actions/download-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
           with:
               name: plugin-${{ matrix.os }}
               path: target/wasm32-wasip1/debug/
