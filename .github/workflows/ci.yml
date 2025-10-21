@@ -104,11 +104,14 @@ jobs:
               targets: wasm32-wasip1
               channel: '1.90.0'
               cache: true
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         - name: Build WASM Plugin
           run: cargo build --target wasm32-wasip1
 
         - name: Verify Build Output
+          shell: bash
           run: |
               echo "Checking for WASM files..."
               ls -la target/wasm32-wasip1/debug/ || echo "Debug directory not found"
@@ -143,6 +146,7 @@ jobs:
               path: target/wasm32-wasip1/debug/
 
         - name: Verify Downloaded Artifact
+          shell: bash
           run: |
               echo "Checking downloaded files..."
               ls -la target/wasm32-wasip1/debug/ || echo "Debug directory not found"
