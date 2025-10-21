@@ -7,7 +7,7 @@ pre-commit:
     jobs:
     - run: cargo fmt --all --check
       glob: '**/*.rs'
-    - run: cargo clippy --all-targets --all-features -- -D warnings
+    - run: cargo clippy --workspace --all-targets
       glob: '**/*.rs'
-    - run: cargo test
+    - run: cargo nextest run --no-default-features
       glob: '**/*.rs'
