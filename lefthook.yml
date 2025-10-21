@@ -1,0 +1,13 @@
+commit-msg:
+    parallel: true
+    jobs:
+    - run: commitlint lint --message "$1"
+pre-commit:
+    parallel: true
+    jobs:
+    - run: cargo fmt --all --check
+      glob: '**/*.rs'
+    - run: cargo clippy --all-targets --all-features -- -D warnings
+      glob: '**/*.rs'
+    - run: cargo test
+      glob: '**/*.rs'

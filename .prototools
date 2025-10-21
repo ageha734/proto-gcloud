@@ -1,5 +1,17 @@
+proto = "0.53.2"
+moon = "1.41.3"
+
+commitlint = "0.10.1"
 dprint = "0.50.1"
+lefthook = "1.12.2"
 
 [plugins]
 gcloud-test = "source:target/wasm32-wasip1/debug/gcloud_plugin.wasm"
-dprint = "https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/dprint/plugin.toml"
+commitlint = "https://raw.githubusercontent.com/ageha734/proto-plugins/refs/heads/master/toml/commitlint.toml"
+dprint = "https://raw.githubusercontent.com/ageha734/proto-plugins/refs/heads/master/toml/dprint.toml"
+lefthook = "https://raw.githubusercontent.com/ageha734/proto-plugins/refs/heads/master/toml/lefthook.toml"
+
+[settings]
+auto-clean = true
+auto-install = true
+detect-strategy = "only-prototools"

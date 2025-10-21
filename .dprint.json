@@ -3,7 +3,6 @@
     "excludes": [
         "**/target/**/*.*"
     ],
-    "lineWidth": 100,
     "indentWidth": 4,
     "useTabs": false,
     "newLineKind": "lf",
@@ -13,10 +12,6 @@
         "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.1.wasm"
     ],
     "json": {
-        "commentLine.forceSpaceAfterSlashes": true,
-        "jsonTrailingCommaFiles": [
-            "tsconfig.json"
-        ]
     },
     "yaml": {
         "quotes": "preferSingle",

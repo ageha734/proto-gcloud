@@ -166,7 +166,7 @@ main() {
     success "Cargo.toml updated"
 
     info "Updating Cargo.lock..."
-    cargo build --quiet 2>/dev/null || cargo check --quiet
+    cargo update --quiet
     success "Cargo.lock updated"
 
     create_tag "$new_version"
