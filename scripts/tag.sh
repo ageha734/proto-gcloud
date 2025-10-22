@@ -116,7 +116,7 @@ create_tag() {
     git commit -m "chore: bump version to $version"
     success "Changes committed"
 
-    # 現在のブランチがmain/masterでない場合、PRワークフローを実行
+    # If current branch is not main/master, execute PR workflow
     if [[ "$current_branch" != "$main_branch" ]]; then
         info "Pushing branch '$current_branch'..."
         git push origin "$current_branch"
