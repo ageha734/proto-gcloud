@@ -163,7 +163,7 @@ jobs:
           run: proto install gcloud-test
 
         - name: Run Versions Test
-          run: gcloud-test versions
+          run: gcloud versions
 
     run-approval:
         needs: [run-build, run-e2e]
