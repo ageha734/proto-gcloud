@@ -149,10 +149,10 @@ pub fn locate_executables(
         exes: HashMap::from_iter([
             (
                 "gcloud".into(),
-                ExecutableConfig::new_primary(
-                    env.os
-                        .for_native("google-cloud-sdk/bin/gcloud", "google-cloud-sdk/bin/gcloud"),
-                ),
+                ExecutableConfig::new_primary(env.os.for_native(
+                    "google-cloud-sdk/bin/gcloud",
+                    "google-cloud-sdk/bin/gcloud.cmd",
+                )),
             ),
             (
                 "gsutil".into(),

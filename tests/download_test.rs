@@ -83,7 +83,7 @@ mod gcloud_tool {
                 .get("gcloud")
                 .unwrap()
                 .exe_path,
-            Some("google-cloud-sdk/bin/gcloud".into())
+            Some("google-cloud-sdk/bin/gcloud.cmd".into())
         );
     }
 }
