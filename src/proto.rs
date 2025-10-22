@@ -110,8 +110,8 @@ pub fn download_prebuilt(
     };
 
     let arch = match env.arch {
-        HostArch::X86 => "x86_64",
-        HostArch::X64 => "x64",
+        HostArch::X86 => "x86",
+        HostArch::X64 => "x86",
         HostArch::Arm => "arm",
         HostArch::Arm64 => "arm",
         _ => unreachable!(),
