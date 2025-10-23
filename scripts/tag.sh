@@ -141,6 +141,11 @@ create_tag() {
         info "Pulling latest changes..."
         git pull origin "$main_branch"
         success "Pulled latest changes"
+    else
+        # If already on main/master branch, push directly
+        info "Pushing to $main_branch branch..."
+        git push origin "$main_branch"
+        success "Changes pushed to $main_branch"
     fi
 
     git tag -a "$tag_name" -m "Release $version"
