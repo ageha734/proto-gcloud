@@ -1,5 +1,4 @@
 proto = "0.53.2"
-moon = "1.41.3"
 
 commitlint = "0.10.1"
 dprint = "0.50.1"

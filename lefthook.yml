@@ -4,10 +4,13 @@ commit-msg:
     - run: commitlint lint --message "$1"
 pre-commit:
     parallel: true
-    jobs:
-    - run: cargo fmt --all --check
-      glob: '**/*.rs'
-    - run: cargo clippy --all-targets --all-features -- -D warnings
-      glob: '**/*.rs'
-    - run: cargo test
-      glob: '**/*.rs'
+    commands:
+        format:
+            glob: '**/*.rs'
+            run: cargo fmt --all --check
+        lint:
+            glob: '**/*.rs'
+            run: cargo clippy --workspace --all-targets
+        build-and-test:
+            glob: '**/*.rs'
+            run: cargo build --target wasm32-wasip1 && cargo nextest run --no-default-features

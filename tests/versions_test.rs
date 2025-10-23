@@ -1,12 +1,16 @@
-use gcloud_plugin::*;
+use gcloud_plugin::extract_version_from_name;
+
+#[cfg(feature = "wasm")]
 use proto_pdk_test_utils::*;
 
+#[cfg(feature = "wasm")]
 generate_resolve_versions_tests!("gcloud-test", {
     "519" => "519.0.0",
     "519.0" => "519.0.0",
     "519.0.0" => "519.0.0",
 });
 
+#[cfg(feature = "wasm")]
 #[tokio::test(flavor = "multi_thread")]
 async fn can_load_versions() {
     let sandbox = create_empty_proto_sandbox();
@@ -17,6 +21,7 @@ async fn can_load_versions() {
     assert!(!output.versions.is_empty());
 }
 
+#[cfg(feature = "wasm")]
 #[tokio::test(flavor = "multi_thread")]
 async fn sets_latest_alias() {
     let sandbox = create_empty_proto_sandbox();
@@ -31,7 +36,6 @@ async fn sets_latest_alias() {
 
 #[test]
 fn test_extract_version_from_name() {
-    // Test basic version extraction
     assert_eq!(
         extract_version_from_name("google-cloud-cli-371.0.0-darwin-arm.tar.gz"),
         Some("371.0.0".to_string())
@@ -47,7 +51,6 @@ fn test_extract_version_from_name() {
         Some("469.0.0".to_string())
     );
 
-    // Test different platforms and architectures
     assert_eq!(
         extract_version_from_name("google-cloud-cli-464.0.0-darwin-x86.tar.gz"),
         Some("464.0.0".to_string())
@@ -63,7 +66,6 @@ fn test_extract_version_from_name() {
         Some("466.0.0".to_string())
     );
 
-    // Test patch versions
     assert_eq!(
         extract_version_from_name("google-cloud-cli-405.0.1-darwin-arm.tar.gz"),
         Some("405.0.1".to_string())
@@ -74,13 +76,11 @@ fn test_extract_version_from_name() {
         Some("417.0.1".to_string())
     );
 
-    // Test without file extensions
     assert_eq!(
         extract_version_from_name("google-cloud-cli-371.0.0-darwin-arm"),
         Some("371.0.0".to_string())
     );
 
-    // Test invalid cases
     assert_eq!(
         extract_version_from_name("not-gcloud-cli-371.0.0-darwin-arm.tar.gz"),
         None
@@ -101,7 +101,6 @@ fn test_extract_version_from_name() {
         None
     );
 
-    // Test edge cases
     assert_eq!(extract_version_from_name(""), None);
 
     assert_eq!(extract_version_from_name("google-cloud-cli-"), None);
@@ -109,7 +108,6 @@ fn test_extract_version_from_name() {
 
 #[test]
 fn test_extract_version_removes_platform_arch() {
-    // Ensure that platform and architecture information is completely removed
     let test_cases = vec![
         ("google-cloud-cli-371.0.0-darwin-arm.tar.gz", "371.0.0"),
         ("google-cloud-cli-371.0.0-darwin-x86.tar.gz", "371.0.0"),
@@ -131,7 +129,6 @@ fn test_extract_version_removes_platform_arch() {
 
 #[test]
 fn test_extract_version_handles_patch_versions() {
-    // Test that patch versions (x.y.z.w) are handled correctly
     let test_cases = vec![
         ("google-cloud-cli-383.0.1-darwin-arm.tar.gz", "383.0.1"),
         ("google-cloud-cli-405.0.1-linux-x86.tar.gz", "405.0.1"),

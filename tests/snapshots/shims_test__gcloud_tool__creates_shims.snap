@@ -1,0 +1,11 @@
+---
+source: tests/shims_test.rs
+assertion_line: 7
+expression: "std :: fs ::\nread_to_string(sandbox.path().join(\".proto/shims/registry.json\")).unwrap()"
+---
+{
+  "gcloud": {},
+  "gsutil": {
+    "parent": "gcloud-test"
+  }
+}

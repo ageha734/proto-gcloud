@@ -89,21 +89,23 @@ check_git_status() {
     if ! git diff-index --quiet HEAD --; then
         error "Uncommitted changes found. Please commit them first."
     fi
+}
 
-    local branch=$(git rev-parse --abbrev-ref HEAD)
-    if [[ "$branch" != "master" && "$branch" != "main" ]]; then
-        warning "Current branch is '$branch'. You are trying to create a tag on a branch other than master/main."
-        read -p "Continue? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            error "Processing interrupted"
-        fi
+get_main_branch() {
+    if git rev-parse --verify main >/dev/null 2>&1; then
+        echo "main"
+    elif git rev-parse --verify master >/dev/null 2>&1; then
+        echo "master"
+    else
+        error "Neither 'main' nor 'master' branch found"
     fi
 }
 
 create_tag() {
     local version=$1
     local tag_name="v$version"
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    local main_branch=$(get_main_branch)
 
     if git rev-parse "$tag_name" >/dev/null 2>&1; then
         error "Tag '$tag_name' already exists"
@@ -114,15 +116,39 @@ create_tag() {
     git commit -m "chore: bump version to $version"
     success "Changes committed"
 
+    # If current branch is not main/master, execute PR workflow
+    if [[ "$current_branch" != "$main_branch" ]]; then
+        info "Pushing branch '$current_branch'..."
+        git push origin "$current_branch"
+        success "Branch pushed"
+
+        info "Merging PR with gh command..."
+        if gh pr merge --auto --squash --delete-branch 2>/dev/null; then
+            success "PR merged and branch deleted"
+        else
+            warning "Failed to auto-merge. Attempting manual merge..."
+            if gh pr merge --squash --delete-branch; then
+                success "PR merged and branch deleted"
+            else
+                error "Failed to merge PR. Please merge manually and run this script again."
+            fi
+        fi
+
+        info "Switching to $main_branch branch..."
+        git checkout "$main_branch"
+        success "Switched to $main_branch"
+
+        info "Pulling latest changes..."
+        git pull origin "$main_branch"
+        success "Pulled latest changes"
+    fi
+
     git tag -a "$tag_name" -m "Release $version"
     success "Tag '$tag_name' created"
 
-    info ""
-    info "You can push the tag with the following command:"
-    info "  git push origin $tag_name"
-    info ""
-    info "Or push all tags:"
-    info "  git push origin --tags"
+    info "Pushing tag to origin..."
+    git push origin "$tag_name"
+    success "Tag '$tag_name' pushed"
 }
 
 main() {

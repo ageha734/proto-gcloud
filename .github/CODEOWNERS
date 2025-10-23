@@ -1,0 +1,16 @@
+./.cargo/* @ageha734
+./.cursor/* @ageha734
+./.github/* @ageha734
+./.vscode/* @ageha734
+./scripts/* @ageha734
+./.clinerules @ageha734
+./.commitlint.yaml @ageha734
+./.dprint.json @ageha734
+./.editorconfig @ageha734
+./.gitignore @ageha734
+./CHANGELOG.md @github_actions
+./clippy.toml @ageha734
+./lefthook.yml @ageha734
+./README.md @ageha734
+./rust-toolchain.toml @ageha734
+./rustfmt.toml @ageha734

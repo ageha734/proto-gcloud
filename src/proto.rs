@@ -1,4 +1,5 @@
 use crate::config::GcloudPluginConfig;
+use crate::version::extract_version_from_name;
 use extism_pdk::*;
 use proto_pdk::*;
 use schematic::SchemaBuilder;
@@ -50,6 +51,7 @@ pub fn register_tool(Json(_): Json<RegisterToolInput>) -> FnResult<Json<Register
         default_install_strategy: InstallStrategy::DownloadPrebuilt,
         config_schema: Some(SchemaBuilder::build_root::<GcloudPluginConfig>()),
         plugin_version: Version::parse(env!("CARGO_PKG_VERSION")).ok(),
+        self_upgrade_commands: vec!["upgrade".into()],
         ..RegisterToolOutput::default()
     }))
 }
@@ -88,54 +90,6 @@ pub fn load_versions(Json(_): Json<LoadVersionsInput>) -> FnResult<Json<LoadVers
     Ok(Json(LoadVersionsOutput::from(version_strings)?))
 }
 
-pub fn extract_version_from_name(name: &str) -> Option<String> {
-    if !name.contains("google-cloud-cli-") {
-        return None;
-    }
-
-    let chars = name.chars().peekable();
-    let mut current_token = String::new();
-    let mut in_version = false;
-    let mut dot_count = 0;
-
-    for ch in chars {
-        if ch.is_ascii_digit() {
-            current_token.push(ch);
-            in_version = true;
-        } else if ch == '.' && in_version {
-            current_token.push(ch);
-            dot_count += 1;
-        } else {
-            if in_version && dot_count >= 2 && !current_token.is_empty() {
-                let parts: Vec<&str> = current_token.split('.').collect();
-                if parts.len() >= 3
-                    && parts
-                        .iter()
-                        .all(|p| !p.is_empty() && p.chars().all(|c| c.is_ascii_digit()))
-                {
-                    return Some(current_token);
-                }
-            }
-            current_token.clear();
-            in_version = false;
-            dot_count = 0;
-        }
-    }
-
-    if in_version && dot_count >= 2 && !current_token.is_empty() {
-        let parts: Vec<&str> = current_token.split('.').collect();
-        if parts.len() >= 3
-            && parts
-                .iter()
-                .all(|p| !p.is_empty() && p.chars().all(|c| c.is_ascii_digit()))
-        {
-            return Some(current_token);
-        }
-    }
-
-    None
-}
-
 #[plugin_fn]
 pub fn download_prebuilt(
     Json(input): Json<DownloadPrebuiltInput>,
@@ -156,8 +110,8 @@ pub fn download_prebuilt(
     };
 
     let arch = match env.arch {
-        HostArch::X86 => "x86_64",
-        HostArch::X64 => "x64",
+        HostArch::X86 => "x86",
+        HostArch::X64 => "x86",
         HostArch::Arm => "arm",
         HostArch::Arm64 => "arm",
         _ => unreachable!(),
@@ -195,10 +149,10 @@ pub fn locate_executables(
         exes: HashMap::from_iter([
             (
                 "gcloud".into(),
-                ExecutableConfig::new_primary(
-                    env.os
-                        .for_native("google-cloud-sdk/bin/gcloud", "google-cloud-sdk/bin/gcloud"),
-                ),
+                ExecutableConfig::new_primary(env.os.for_native(
+                    "google-cloud-sdk/bin/gcloud",
+                    "google-cloud-sdk/bin/gcloud.cmd",
+                )),
             ),
             (
                 "gsutil".into(),
