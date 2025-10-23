@@ -2,16 +2,12 @@ name: '[CI] Proto Tools'
 
 on:
     push:
-        branches:
-        - prerelease
         paths:
         - '.github/workflows/ci.yml'
         - 'src/**'
         - 'tests/**'
         - 'Cargo.toml'
     pull_request:
-        branches:
-        - prerelease
         paths:
         - '.github/workflows/ci.yml'
         - 'src/**'
