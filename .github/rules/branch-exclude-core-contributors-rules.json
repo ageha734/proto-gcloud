@@ -1,0 +1,33 @@
+{
+  "id": 9115720,
+  "name": "branch-exclude-core-contributors-rules",
+  "target": "branch",
+  "source_type": "Repository",
+  "source": "dmm-com/dmm-pf-api-client-scope",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "exclude": [],
+      "include": [
+        "refs/heads/main"
+      ]
+    }
+  },
+  "rules": [
+    {
+      "type": "update"
+    }
+  ],
+  "bypass_actors": [
+    {
+      "actor_id": 2,
+      "actor_type": "RepositoryRole",
+      "bypass_mode": "always"
+    },
+    {
+      "actor_id": 5,
+      "actor_type": "RepositoryRole",
+      "bypass_mode": "always"
+    }
+  ]
+}
