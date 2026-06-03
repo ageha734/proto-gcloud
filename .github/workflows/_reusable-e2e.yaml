@@ -43,13 +43,20 @@ jobs:
             core.setOutput('value', pathToFileURL(pluginPath).href);
 
       - name: Configure plugin
-        run: |
-          cat > .prototools <<PROTOEOF
-          gcloud = "571.0.0"
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { writeFileSync } = require('node:fs');
+            const { join } = require('node:path');
 
-          [plugins]
-          gcloud = "${{ steps.plugin-uri.outputs.value }}"
-          PROTOEOF
+            const prototoolsPath = join(process.env.GITHUB_WORKSPACE, '.prototools');
+            const content = [
+              'gcloud = "571.0.0"',
+              '[plugins]',
+              'gcloud = "${{ steps.plugin-uri.outputs.value }}"',
+            ].join('\n');
+
+            writeFileSync(prototoolsPath, content);
 
       - name: Run E2E (${{ matrix.os }})
         run: proto install gcloud
