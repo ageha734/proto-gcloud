@@ -11,6 +11,10 @@ publish = false
 [lib]
 crate-type = ["cdylib", "lib"]
 
+[features]
+default = []
+wasm = ["dep:extism-pdk", "dep:proto_pdk", "dep:schematic"]
+
 [dependencies]
 extism-pdk = { version = "1.4.1", optional = true }
 proto_pdk = { version = "0.32.8", optional = true }

@@ -2,7 +2,6 @@ use crate::config::GcloudPluginConfig;
 use crate::version::extract_version_from_name;
 use extism_pdk::*;
 use proto_pdk::*;
-use schematic::SchemaBuilder;
 
 use std::collections::HashMap;
 
@@ -18,12 +17,12 @@ fn check_version_for_os_and_arch(
     _version_spec: &VersionSpec,
 ) -> FnResult<()> {
     match env.os {
-        HostOS::Linux | HostOS::MacOS | HostOS::Windows => {},
+        HostOS::Linux | HostOS::MacOS | HostOS::Windows => {}
         _ => return Err(plugin_err!("Unsupported operating system: {:?}", env.os)),
     }
 
     match env.arch {
-        HostArch::X86 | HostArch::X64 | HostArch::Arm | HostArch::Arm64 => {},
+        HostArch::X86 | HostArch::X64 | HostArch::Arm | HostArch::Arm64 => {}
         _ => return Err(plugin_err!("Unsupported architecture: {:?}", env.arch)),
     }
 
@@ -48,7 +47,6 @@ pub fn register_tool(Json(_): Json<RegisterToolInput>) -> FnResult<Json<Register
         name: NAME.into(),
         minimum_proto_version: Some(Version::new(0, 51, 4)),
         type_of: PluginType::CommandLine,
-        config_schema: Some(SchemaBuilder::build_root::<GcloudPluginConfig>()),
         plugin_version: Version::parse(env!("CARGO_PKG_VERSION")).ok(),
         self_upgrade_commands: vec!["upgrade".into()],
         ..RegisterToolOutput::default()
