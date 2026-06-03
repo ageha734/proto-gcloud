@@ -1,4 +1,4 @@
-use gcloud_plugin::extract_version_from_name;
+use proto_gcloud::extract_version_from_name;
 
 #[cfg(feature = "wasm")]
 use proto_pdk_test_utils::*;
