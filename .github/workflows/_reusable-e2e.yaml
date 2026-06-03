@@ -8,46 +8,48 @@ permissions:
 
 jobs:
   e2e:
-    name: "E2E (${{ matrix.os }})"
+    name: "E2E (${{ matrix.target }})"
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        os: [ubuntu-24.04, macos-15]
       fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+            os: macos-15
+          - target: aarch64-apple-darwin
+            os: macos-15
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-24.04
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-24.04
+          - target: x86_64-pc-windows-msvc
+            os: windows-2025
+
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
-      - id: toolchain
-        run: echo "channel=$(sed -n 's/^channel = "\(.*\)"/\1/p' rust-toolchain.toml)" >> "$GITHUB_OUTPUT"
-
-      - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          toolchain: ${{ steps.toolchain.outputs.channel }}
-          targets: wasm32-wasip1
-
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-
-      - name: Build WASM plugin
-        run: cargo build --target wasm32-wasip1 --release --features wasm
+          path: proto_gcloud.wasm
 
       - name: Setup proto
         uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
         with:
           auto-install: true
 
+      - run: mkdir -p ~/.proto
+
       - name: Configure plugin
         run: |
-          mkdir -p ~/.proto
           cat > ~/.proto/.prototools <<'PROTOEOF'
           [plugins]
-          gcloud-test = "file://TARGET_PATH/proto_gcloud.wasm"
+          gcloud-test = "file://$(pwd)/proto_gcloud.wasm"
           PROTOEOF
-          sed -i'' -e "s|TARGET_PATH|$(pwd)/target/wasm32-wasip1/release|g" ~/.proto/.prototools
 
-      - name: Run E2E - proto install
+      - name: Run E2E (${{ matrix.target }})
         run: proto install gcloud-test
 
-      - name: Verify installation
+      - name: Verify installation (${{ matrix.target }})
         run: proto run gcloud-test -- version
