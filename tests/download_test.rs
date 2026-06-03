@@ -1,8 +1,5 @@
 use proto_pdk_test_utils::*;
 
-// We use a fake home directory but rustup requires a real one!
-// generate_download_install_tests!("rust-test", "1.70.0");
-
 mod gcloud_tool {
     use super::*;
 
@@ -18,7 +15,7 @@ mod gcloud_tool {
         assert_eq!(
             plugin
                 .locate_executables(LocateExecutablesInput {
-                    context: ToolContext {
+                    context: PluginContext {
                         version: VersionSpec::parse("533.0.0").unwrap(),
                         ..Default::default()
                     },
@@ -45,7 +42,7 @@ mod gcloud_tool {
         assert_eq!(
             plugin
                 .locate_executables(LocateExecutablesInput {
-                    context: ToolContext {
+                    context: PluginContext {
                         version: VersionSpec::parse("533.0.0").unwrap(),
                         ..Default::default()
                     },
@@ -72,7 +69,7 @@ mod gcloud_tool {
         assert_eq!(
             plugin
                 .locate_executables(LocateExecutablesInput {
-                    context: ToolContext {
+                    context: PluginContext {
                         version: VersionSpec::parse("533.0.0").unwrap(),
                         ..Default::default()
                     },

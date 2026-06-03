@@ -48,7 +48,6 @@ pub fn register_tool(Json(_): Json<RegisterToolInput>) -> FnResult<Json<Register
         name: NAME.into(),
         minimum_proto_version: Some(Version::new(0, 51, 4)),
         type_of: PluginType::CommandLine,
-        default_install_strategy: InstallStrategy::DownloadPrebuilt,
         config_schema: Some(SchemaBuilder::build_root::<GcloudPluginConfig>()),
         plugin_version: Version::parse(env!("CARGO_PKG_VERSION")).ok(),
         self_upgrade_commands: vec!["upgrade".into()],
