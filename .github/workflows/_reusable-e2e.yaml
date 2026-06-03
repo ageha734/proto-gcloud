@@ -28,23 +28,31 @@ jobs:
           name: proto_gcloud.wasm
           path: .
 
-      - name: Setup proto
-        uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
+      - uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
         with:
           auto-install: true
 
+      - id: plugin-uri
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { pathToFileURL } = require('node:url');
+            const { join } = require('node:path');
+
+            const pluginPath = join(process.env.GITHUB_WORKSPACE, 'proto_gcloud.wasm');
+            core.setOutput('value', pathToFileURL(pluginPath).href);
+
       - name: Configure plugin
-        shell: bash
         run: |
           cat > .prototools <<PROTOEOF
-          gcloud-test = "571.0.0"
+          gcloud = "571.0.0"
 
           [plugins]
-          gcloud-test = "file://$(pwd)/proto_gcloud.wasm"
+          gcloud = "${{ steps.plugin-uri.outputs.value }}"
           PROTOEOF
 
       - name: Run E2E (${{ matrix.os }})
-        run: proto install gcloud-test
+        run: proto install gcloud
 
       - name: Verify installation (${{ matrix.os }})
-        run: proto run gcloud-test -- version
+        run: proto run gcloud -- version
