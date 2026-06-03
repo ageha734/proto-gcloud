@@ -8,22 +8,15 @@ permissions:
 
 jobs:
   e2e:
-    name: "E2E (${{ matrix.target }})"
+    name: "E2E (${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - target: x86_64-apple-darwin
-            os: macos-15
-          - target: aarch64-apple-darwin
-            os: macos-15
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-24.04
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-24.04
-          - target: x86_64-pc-windows-msvc
-            os: windows-2025
+          - os: macos-15
+          - os: ubuntu-24.04
+          - os: windows-2025
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -48,8 +41,8 @@ jobs:
           gcloud-test = "file://$(pwd)/proto_gcloud.wasm"
           PROTOEOF
 
-      - name: Run E2E (${{ matrix.target }})
+      - name: Run E2E (${{ matrix.os }})
         run: proto install gcloud-test
 
-      - name: Verify installation (${{ matrix.target }})
+      - name: Verify installation (${{ matrix.os }})
         run: proto run gcloud-test -- version
