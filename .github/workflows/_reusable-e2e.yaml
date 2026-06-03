@@ -34,8 +34,11 @@ jobs:
           auto-install: true
 
       - name: Configure plugin
+        shell: bash
         run: |
           cat > .prototools <<PROTOEOF
+          gcloud-test = "571.0.0"
+
           [plugins]
           gcloud-test = "file://$(pwd)/proto_gcloud.wasm"
           PROTOEOF
