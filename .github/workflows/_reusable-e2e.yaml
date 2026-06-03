@@ -40,13 +40,14 @@ jobs:
             const { join } = require('node:path');
 
             const pluginPath = join(process.env.GITHUB_WORKSPACE, 'proto_gcloud.wasm');
-            const pluginPathForProto = pluginPath.replace(/\\/g, '/');
+            const normalizedPath = pluginPath.replace(/\\/g, '/');
+            const pluginUri = `file://${normalizedPath}`;
 
             const prototoolsPath = join(process.env.GITHUB_WORKSPACE, '.prototools');
             const content = [
               'gcloud = "571.0.0"',
               '[plugins.tools]',
-              `gcloud = "${pluginPathForProto}"`,
+              `gcloud = "${pluginUri}"`,
             ].join('\n');
 
             writeFileSync(prototoolsPath, content);
