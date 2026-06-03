@@ -1,9 +1,0 @@
-[env]
-# having this set messes with tests as it'll be outside the sandbox
-DOTNET_ROOT = { value = "", force = true }
-
-[alias]
-build = "build --target wasm32-wasip1"
-format = "fmt --all --check"
-lint = "clippy --workspace --all-targets"
-test = "nextest run --no-default-features"
