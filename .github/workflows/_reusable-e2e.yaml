@@ -32,16 +32,6 @@ jobs:
         with:
           auto-install: true
 
-      - id: plugin-uri
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const { pathToFileURL } = require('node:url');
-            const { join } = require('node:path');
-
-            const pluginPath = join(process.env.GITHUB_WORKSPACE, 'proto_gcloud.wasm');
-            core.setOutput('value', pathToFileURL(pluginPath).href);
-
       - name: Configure plugin
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
@@ -53,7 +43,7 @@ jobs:
             const content = [
               'gcloud = "571.0.0"',
               '[plugins]',
-              'gcloud = "${{ steps.plugin-uri.outputs.value }}"',
+              'gcloud = "./proto_gcloud.wasm"',
             ].join('\n');
 
             writeFileSync(prototoolsPath, content);
