@@ -11,12 +11,13 @@ async function run(cmd: string[]): Promise<string> {
 }
 
 async function main() {
-  const latestTag = await run(["git", "describe", "--tags", "--abbrev=0"]).catch(() => "");
+  const latestTag = await run(["git", "describe", "--tags", "--abbrev=0", "--match", "v*"]).catch(() => "");
 
   const range = latestTag ? `${latestTag}..HEAD` : "HEAD";
   const log = await run(["git", "log", range, "--pretty=format:%s"]);
 
   if (!log) {
+    console.error(`No commits since ${latestTag || "(repo start)"}; skipping release.`);
     Deno.exit(0);
   }
 
