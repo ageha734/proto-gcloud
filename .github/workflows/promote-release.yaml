@@ -81,13 +81,24 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           STABLE_TAG: ${{ steps.version.outputs.stable_tag }}
           PRE_TAG: ${{ inputs.tag }}
-        run: >-
-          gh release create "$STABLE_TAG"
-          --title "$STABLE_TAG"
-          --notes "Promoted from ${PRE_TAG}"
-          --latest
-          release-assets/*
-          -R ${{ github.repository }}
+        run: |
+          if gh release view "$STABLE_TAG" -R "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "Release $STABLE_TAG already exists; updating it."
+            gh release edit "$STABLE_TAG" \
+              --title "$STABLE_TAG" \
+              --notes "Promoted from ${PRE_TAG}" \
+              --latest \
+              --prerelease=false \
+              -R "${{ github.repository }}"
+            gh release upload "$STABLE_TAG" release-assets/* --clobber -R "${{ github.repository }}"
+          else
+            gh release create "$STABLE_TAG" \
+              --title "$STABLE_TAG" \
+              --notes "Promoted from ${PRE_TAG}" \
+              --latest \
+              release-assets/* \
+              -R "${{ github.repository }}"
+          fi
 
       - name: Demote pre-release to None
         env:
