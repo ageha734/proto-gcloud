@@ -44,13 +44,29 @@ jobs:
               repo: context.repo.repo,
               ref: `tags/${preTag}`,
             });
-            await github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${stableTag}`,
-              sha: ref.object.sha,
-            });
-            console.log(`Created tag ${stableTag} at ${ref.object.sha}`);
+            const sha = ref.object.sha;
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${stableTag}`,
+                sha,
+              });
+              console.log(`Created tag ${stableTag} at ${sha}`);
+            } catch (error) {
+              if (error.status === 422) {
+                await github.rest.git.updateRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `tags/${stableTag}`,
+                  sha,
+                  force: true,
+                });
+                console.log(`Tag ${stableTag} already existed; updated to ${sha}`);
+              } else {
+                throw error;
+              }
+            }
 
       - run: mkdir -p release-assets
 
