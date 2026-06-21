@@ -29,7 +29,7 @@ jobs:
           deno-version: v2.x
 
       - id: version
-        run: deno run --allow-run --allow-read --allow-env .github/scripts/release/determine-version.ts
+        run: deno run --allow-run --allow-read --allow-env --allow-write .github/scripts/release/determine-version.ts
 
       - if: steps.version.outputs.version == ''
         run: echo "::warning::No release version determined (no new commits since latest tag). Skipping release PR creation."
