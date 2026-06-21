@@ -95,5 +95,6 @@ cargo clippy --target wasm32-wasip1 --features wasm -- -D warnings
 # Run tests
 cargo test
 cargo build --target wasm32-wasip1 --features wasm
+cp target/wasm32-wasip1/debug/proto_gcloud.wasm target/wasm32-wasip1/debug/proto-gcloud.wasm
 cargo test --features wasm
 ```
