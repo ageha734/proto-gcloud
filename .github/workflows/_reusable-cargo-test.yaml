@@ -29,3 +29,12 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+      - name: Build WASM plugin for tests
+        run: cargo build --target wasm32-wasip1 --features wasm
+
+      - name: Expose WASM plugin under package name
+        run: cp target/wasm32-wasip1/debug/proto_gcloud.wasm target/wasm32-wasip1/debug/proto-gcloud.wasm
+
+      - name: Run WASM plugin tests
+        run: cargo test --features wasm
