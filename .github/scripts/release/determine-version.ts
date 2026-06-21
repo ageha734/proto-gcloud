@@ -10,6 +10,15 @@ async function run(cmd: string[]): Promise<string> {
   return decoder.decode(stdout).trim();
 }
 
+async function setOutput(value: string) {
+  const outputPath = Deno.env.get("GITHUB_OUTPUT");
+  if (outputPath) {
+    await Deno.writeTextFile(outputPath, `version=${value}\n`, { append: true });
+  } else {
+    console.log(value);
+  }
+}
+
 async function main() {
   const latestTag = await run(["git", "describe", "--tags", "--abbrev=0", "--match", "v*"]).catch(() => "");
 
@@ -18,6 +27,7 @@ async function main() {
 
   if (!log) {
     console.error(`No commits since ${latestTag || "(repo start)"}; skipping release.`);
+    await setOutput("");
     Deno.exit(0);
   }
 
@@ -63,7 +73,7 @@ async function main() {
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const version = `${major}.${minor}.${patch}-alpha.${date}.${runNumber}`;
 
-  console.log(version);
+  await setOutput(version);
 }
 
 main();
