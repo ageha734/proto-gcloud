@@ -1,6 +1,6 @@
 [package]
 name = "proto-gcloud"
-version = "0.1.4"
+version = "1.0.2"
 edition = "2024"
 description = "Proto WASM plugin for Google Cloud SDK."
 authors = ["ageha734"]
