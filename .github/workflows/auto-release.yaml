@@ -22,12 +22,17 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - run: git fetch --tags --force
+
       - uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282 # v2.0.4
         with:
           deno-version: v2.x
 
       - id: version
         run: deno run --allow-run --allow-read --allow-env .github/scripts/release/determine-version.ts
+
+      - if: steps.version.outputs.version == ''
+        run: echo "::warning::No release version determined (no new commits since latest tag). Skipping release PR creation."
 
       - if: steps.version.outputs.version != ''
         run: sed -i "s/^version = \".*\"/version = \"${{ steps.version.outputs.version }}\"/" Cargo.toml
