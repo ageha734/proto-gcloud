@@ -29,3 +29,9 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+      - name: Build WASM plugin for tests
+        run: cargo build --target wasm32-wasip1 --features wasm
+
+      - name: Run WASM plugin tests
+        run: cargo test --features wasm

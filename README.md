@@ -29,7 +29,12 @@ proto install gcloud 519.0.0
 
 ## Configuration
 
-gcloud plugin does not support configuration.
+The default distribution URL can be overridden with `dist-url`.
+
+```toml
+[tools.gcloud]
+dist-url = "https://storage.googleapis.com/storage/v1/b/cloud-sdk-release/o/google-cloud-cli-{version}-{platform}-{arch}.{ext}?alt=media"
+```
 
 ## Hooks
 
@@ -41,7 +46,7 @@ Build the plugin:
 
 ```shell
 rustup target add wasm32-wasip1
-cargo build --target wasm32-wasip1
+cargo build --target wasm32-wasip1 --release --features wasm
 ```
 
 Test the plugin by running `proto` commands.
@@ -85,8 +90,10 @@ Note: `CHANGELOG.md` is automatically updated by GitHub Actions when the tag is 
 cargo fmt --all
 
 # Run linter
-cargo clippy --workspace --all-targets
+cargo clippy --target wasm32-wasip1 --features wasm -- -D warnings
 
 # Run tests
 cargo test
+cargo build --target wasm32-wasip1 --features wasm
+cargo test --features wasm
 ```
