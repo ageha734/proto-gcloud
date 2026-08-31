@@ -53,6 +53,7 @@ mod gcloud_tool {
         let mut plugin = sandbox.create_plugin("gcloud-test").await;
 
         flow::link::Linker::new(&mut plugin.tool, &ToolSpec::default())
+            .unwrap()
             .link_shims(false)
             .await
             .unwrap();
