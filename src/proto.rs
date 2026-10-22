@@ -45,7 +45,7 @@ struct GcloudReleaseItem {
 pub fn register_tool(Json(_): Json<RegisterToolInput>) -> FnResult<Json<RegisterToolOutput>> {
     Ok(Json(RegisterToolOutput {
         name: NAME.into(),
-        minimum_proto_version: Some(Version::new(0, 51, 4)),
+        minimum_proto_version: Some(Version::new(0, 60, 0)),
         type_of: PluginType::CommandLine,
         plugin_version: Version::parse(env!("CARGO_PKG_VERSION")).ok(),
         self_upgrade_commands: vec!["upgrade".into()],
@@ -95,7 +95,7 @@ pub fn download_prebuilt(
 
     let version_spec = input.context.version;
 
-    check_version_for_os_and_arch(&env, &version_spec)?;
+    check_version_for_os_and_arch(env, &version_spec)?;
 
     let config = get_tool_config::<GcloudPluginConfig>()?;
 

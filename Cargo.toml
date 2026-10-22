@@ -17,12 +17,12 @@ wasm = ["dep:extism-pdk", "dep:proto_pdk", "dep:schematic"]
 
 [dependencies]
 extism-pdk = { version = "1.4.1", optional = true }
-proto_pdk = { version = "0.32.8", optional = true }
+proto_pdk = { version = "0.35.3", optional = true }
 schematic = { version = "0.18.11", default-features = false, features = ["schema"], optional = true }
 serde = { version = "1.0.219", features = ["derive"] }
 
 [dev-dependencies]
-proto_pdk_test_utils = "0.45.1"
+proto_pdk_test_utils = "0.49.5"
 starbase_sandbox = "0.9.4"
 tokio = { version = "1.46.1", features = ["full"] }
 
